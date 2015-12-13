@@ -15,7 +15,8 @@ class CypherTest < Minitest::Test
 
   def test_get_last_four_numbers_from_squaredate
     date = Cypher.new
-    
+
+    git hub test
 
 
 
