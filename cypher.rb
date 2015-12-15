@@ -6,10 +6,10 @@ class Cypher
   #attr_accessor :input
 
   def initialize(input="")
-    time = Time.new                  # => 2015-12-13 21:41:18 -0700
-    @date = time.strftime("%d%m%y")  # => "131215"
-    @test_key = 41521                # => 41521
-    @input = input                   # => "ab"
+    time = Time.new         # => 2015-12-14 20:24:21 -0700
+    @date = 131215 #time.strftime("%d%m%y")
+    @test_key = 41521       # => 41521
+    @input = input          # => "A"
   end
 
   def todays_date
@@ -77,18 +77,99 @@ class Cypher
 
   def place_value
 
-    input = @input.split(//)                                                                                                                                                    # => ["a", "b"]
-    characters = ["a","b","c","d","e","f","g","h","i","j","k","l","m","n","o","p","q","r","s","t","u","v","w","x","y","z","0","1","2","3","4","5","6","7","8","9"," ",".",","]  # => ["a", "b", "c", "d", "e", "f", "g", "h", "i", "j", "k", "l", "m", "n", "o", "p", "q", "r", "s", "t", "u", "v", "w", "x", "y", "z", "0", "1", "2", "3", "4", "5", "6", "7", "8", "9", " ", ".", ","]
-    inputs = input.map do |i|                                                                                                                                                   # => ["a", "b"]
-      characters.index(i)                                                                                                                                                       # => 0, 1
-    end                                                                                                                                                                         # => [0, 1]
+    input = @input.split(//)                        # => ["A"]
+    characters = [*'a'..'z',*'0'..'9',' ','.',',']  # => ["a", "b", "c", "d", "e", "f", "g", "h", "i", "j", "k", "l", "m", "n", "o", "p", "q", "r", "s", "t", "u", "v", "w", "x", "y", "z", "0", "1", "2", "3", "4", "5", "6", "7", "8", "9", " ", ".", ","]
+    inputs = input.map do |i|                       # => ["A"]
+      characters.index(i)                           # => nil
+    end                                             # => [nil]
+  end
+
+  def full_value_a
+    value_for_a = full_rotation_a + place_value[0]
+  end
 
 
+  def full_value_b
+    value_for_b = full_rotation_b + place_value[1]
+  end
+
+  def full_value_c
+    value_for_c = full_rotation_c + place_value[2]
+  end
+
+  def full_value_d
+    value_for_d = full_rotation_d + place_value[3]
+  end
+
+  def rotations
+  a = full_rotation_a
+  b = full_rotation_b
+  c = full_rotation_c
+  d = full_rotation_d
+  rotations = [a,b,c,d]
+  end
+
+  def convert
+    rotations = Cypher.new.rotations
+    array = place_value
+    #array = [7,4,11,11,14]
+    #rotations = [47, 17, 54, 26]
+    array.map.with_index do |num, index|
+      (num + rotations[index % 4]) % 39
+    end
+  end
+
+  def encrypt
+    converted = convert
+    characters = [*'a'..'z',*'0'..'9',' ','.',',']
+    converted.map do |num|
+      characters[num]
+    end
+  end
+
+  def decrypt
+    array = place_value
+    rotations = Cypher.new.rotations
+    characters = [*'a'..'z',*'0'..'9',' ','.',',']
+    array.map.with_index do |num, index|
+      a = characters.rotate num
+      b = a.rotate! -rotations[index %4]
+      b[0]
+    end
   end
 
 
 
 
+
+
+  #test = Cypher.new("A").place_value # => [nil]
+
 end
 
-    #  tes = Cypher.new("ab").place_value  # => [0, 1]
+    # tes = Cypher.new("hellohello").place_value  # => [7, 4, 11, 11, 14, 36, 36, 36, 7, 4, 11, 11, 14]
+
+# array = [7,4,11,11,36]
+# convert(array)
+# # new_array = [54, 21, 65, 37, 83]
+#
+# def convert(original_array)
+#   rotations = [47, 17, 54, 26]
+#   r_count = 4
+#   #counter = 0
+# .each_with_index
+# .map
+# .map_with_index
+# .with_index
+# .map.with_index
+# .each.with_index
+#
+#   original_array.map.with_index do |num, index|
+#     (num + rotations[index % 4]) % 39
+#   end
+#
+#
+# end
+#
+#
+# final value map => [54, 21, 65, 37, ]
