@@ -1,15 +1,13 @@
-require 'pry'  # => true
-
+require 'pry'
 
 class Cypher
-  attr_reader :test_key  # => nil
-  #attr_accessor :input
+  attr_reader :test_key
 
   def initialize(input="")
-    time = Time.new         # => 2015-12-14 20:24:21 -0700
+    time = Time.new
     @date = 131215 #time.strftime("%d%m%y")
-    @test_key = 41521       # => 41521
-    @input = input          # => "A"
+    @test_key = 41521
+    @input = input
   end
 
   def todays_date
@@ -77,11 +75,11 @@ class Cypher
 
   def place_value
 
-    input = @input.split(//)                        # => ["A"]
-    characters = [*'a'..'z',*'0'..'9',' ','.',',']  # => ["a", "b", "c", "d", "e", "f", "g", "h", "i", "j", "k", "l", "m", "n", "o", "p", "q", "r", "s", "t", "u", "v", "w", "x", "y", "z", "0", "1", "2", "3", "4", "5", "6", "7", "8", "9", " ", ".", ","]
-    inputs = input.map do |i|                       # => ["A"]
-      characters.index(i)                           # => nil
-    end                                             # => [nil]
+    input = @input.split(//)
+    characters = [*'a'..'z',*'0'..'9',' ','.',',']
+    inputs = input.map do |i|
+      characters.index(i)
+    end
   end
 
   def full_value_a
@@ -129,6 +127,7 @@ class Cypher
 
   def decrypt
     array = place_value
+
     rotations = Cypher.new.rotations
     characters = [*'a'..'z',*'0'..'9',' ','.',',']
     array.map.with_index do |num, index|
@@ -138,38 +137,45 @@ class Cypher
     end
   end
 
+  def last_four_uncracked_values
+    a = place_value
+    a[-4..-1]
+  end
 
+  def last_four_minus_crack_four
+    a = last_four_uncracked_values
+    crack_four = [13,3,37,37]
+    [a[0] - crack_four[0], a[1] - crack_four[1],
+    a[2] - crack_four[2], a[3] - crack_four[3] ]
+  end
 
+  def value_reversal
+    a = last_four_minus_crack_four
+    a.map do |num|
+      if num > 0
+        num = -num
+      elsif num < 0
+        num = num.abs
+      else
+        num = num
+      end
+    end
+  end
 
+  def reversed_absolute_values
+    a = place_value.reverse
+    b = value_reversal.reverse
+    a.map.with_index do |num, index|
+      (num + b[index %4]) % 39
+    end
+  end
 
+  def crack
+    a = reversed_absolute_values.reverse
+    characters = [*'a'..'z',*'0'..'9',' ','.',',']
+    a.map do |num|
+      characters[num]
+    end
+  end
 
-  #test = Cypher.new("A").place_value # => [nil]
-
-end
-
-    # tes = Cypher.new("hellohello").place_value  # => [7, 4, 11, 11, 14, 36, 36, 36, 7, 4, 11, 11, 14]
-
-# array = [7,4,11,11,36]
-# convert(array)
-# # new_array = [54, 21, 65, 37, 83]
-#
-# def convert(original_array)
-#   rotations = [47, 17, 54, 26]
-#   r_count = 4
-#   #counter = 0
-# .each_with_index
-# .map
-# .map_with_index
-# .with_index
-# .map.with_index
-# .each.with_index
-#
-#   original_array.map.with_index do |num, index|
-#     (num + rotations[index % 4]) % 39
-#   end
-#
-#
-# end
-#
-#
-# final value map => [54, 21, 65, 37, ]
+end  

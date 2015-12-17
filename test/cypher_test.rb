@@ -1,50 +1,53 @@
-require 'minitest/autorun'  # => true
-require_relative 'cypher'   # ~> ArgumentError: wrong number of arguments (0 for 1)
+# require 'simplecov'
+# SimpleCov.start
+
+require 'minitest/autorun'
 require 'pry'
+require_relative './../lib/cypher'
 
 class CypherTest < Minitest::Test
   def setup
-    @cypher = Cypher.new           # => #<Cypher:0x007fd08506c810 @date="131215", @test_key=41521, @input="">, #<Cypher:0x007fd085057e38 @date="131215", @test_key=41521, @input="">, #<Cypher:0x007fd085846a90 @date="131215", @test_key=41521, @input="">, #<Cypher:0x007fd085845e10 @date="131215", @test_key=41521, @input="">, #<Cypher:0x007fd085844e48 @date="131215", @test_key=41521, @input="">, #<Cypher:0x007fd0858376f8 @date="131215", @test_key=41521, @input="">, #<Cypher:0x007fd08418f680 @date="131215", @test_key=41521, @input="">, #<Cypher:0x007fd08418ec58 @date="131215", @test_key=41521, @input="">, #<Cypher:0x007fd08418d4e8 @date="131215", @test_key=41521, @input="">, #<Cypher:0x007fd08418cd40 @date="131215", @test_key=41521, @input="">, #<Cypher:0x007fd08418e708 @date="131215", @test_key=41521, @input="">, #<Cypher:0x007fd08416ff60 @date="131215", @test_key=41521, @input="">, #<Cypher:0x007fd08514c2d0 @date="131215", @test_key=41521, @input="">, #<Cypher:0x007fd08513e6f8 @date="131215", @test_key=41521, @input="">
+    @cypher = Cypher.new
   end
 
   def test_take_the_date
-    assert_equal 131215, @cypher.todays_date  # => true
+    assert_equal 131215, @cypher.todays_date
   end
 
   def test_square_the_date
-    assert_equal 17217376225 , @cypher.squared  # => true
+    assert_equal 17217376225 , @cypher.squared
   end
 
   def test_get_last_four_numbers_from_squaredate
-    assert_equal 6225, @cypher.last_four          # => true
+    assert_equal 6225, @cypher.last_four
   end
 
   def test_sample_key
-    assert_equal 41521, @cypher.test_key  # => true
+    assert_equal 41521, @cypher.test_key
   end
 
   def test_encryption_for_rotation_a
-    assert_equal 41, @cypher.rotation_a  # => true
+    assert_equal 41, @cypher.rotation_a
   end
 
   def test_encryption_for_offset_a
-    assert_equal 6, @cypher.offset_a  # => true
+    assert_equal 6, @cypher.offset_a
   end
 
   def test_encryption_for_rotation_plus_offset_a
-    assert_equal 47, @cypher.full_rotation_a      # => true
+    assert_equal 47, @cypher.full_rotation_a
   end
 
   def test_encryption_for_rotation_plus_offset_b
-    assert_equal 17, @cypher.full_rotation_b      # => true
+    assert_equal 17, @cypher.full_rotation_b
   end
 
   def test_encryption_for_rotation_plus_offset_c
-    assert_equal 54, @cypher.full_rotation_c      # => true
+    assert_equal 54, @cypher.full_rotation_c
   end
 
   def test_encryption_for_rotation_plus_offset_d
-    assert_equal 26, @cypher.full_rotation_d      # => true
+    assert_equal 26, @cypher.full_rotation_d
   end
 
   def test_find_place_value_of_letter
@@ -99,7 +102,7 @@ class CypherTest < Minitest::Test
   end
 
   def test_converted_array_to_encrypt
-    message = Cypher.new("hello")
+    message = Cypher.new("hello")#hello
     assert_equal ["p","v","0",".","w"], message.encrypt
   end
 
@@ -122,4 +125,36 @@ class CypherTest < Minitest::Test
     message = Cypher.new("pv0.wo1lfw68m4s")
     assert_equal ["h","e","l","l","o"," ","m","y"," ","f","r","i","e","n","d"], message.decrypt
   end
+
+  def test_last_four_values_for_crack
+    #outputs real key???
+    message = Cypher.new("ww6h3nt7t5y7n")
+    assert_equal [31,24,33,13], message.last_four_uncracked_values
+  end
+
+  def test_last_four_minus_crack_key
+    message = Cypher.new("ww6h3nt7t5y7n")
+    assert_equal [18,21,-4,-24], message.last_four_minus_crack_four
+  end
+
+  def test_reverse_values_of_four_minus_crack_four
+    message = Cypher.new("ww6h3nt7t5y7n")
+    assert_equal [-18,-21,4,24], message.value_reversal
+  end
+
+  def test_absolute_value_for_crack
+    message = Cypher.new("7t5y7n")
+    assert_equal [37,37,3,13,4, 37], message.reversed_absolute_values
+  end
+
+
+
+
+
+  def test_cracking_the_message
+    message = Cypher.new("ww6h3nt7t5y7n")
+    assert_equal ["h", "e", "l", "l", "o", "8", ".", ".", "e", "n", "d", ".", "."], message.crack
+  end
+
+
 end
