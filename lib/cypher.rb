@@ -1,7 +1,7 @@
 require 'pry'
 
 class Cypher
-  attr_reader :test_key
+  attr_reader :test_key, :date
 
   def initialize(input="")
     time = Time.new
@@ -78,6 +78,7 @@ class Cypher
     input = @input.split(//)
     characters = [*'a'..'z',*'0'..'9',' ','.',',']
     inputs = input.map do |i|
+
       characters.index(i)
     end
   end
@@ -110,6 +111,7 @@ class Cypher
   def convert
     rotations = Cypher.new.rotations
     array = place_value
+    #binding.pry
     #array = [7,4,11,11,14]
     #rotations = [47, 17, 54, 26]
     array.map.with_index do |num, index|
@@ -122,7 +124,7 @@ class Cypher
     characters = [*'a'..'z',*'0'..'9',' ','.',',']
     converted.map do |num|
       characters[num]
-    end
+    end.join
   end
 
   def decrypt
@@ -130,11 +132,13 @@ class Cypher
 
     rotations = Cypher.new.rotations
     characters = [*'a'..'z',*'0'..'9',' ','.',',']
-    array.map.with_index do |num, index|
+    #binding.pry
+    decrypted = array.map.with_index do |num, index|
       a = characters.rotate num
       b = a.rotate! -rotations[index %4]
       b[0]
     end
+    decrypted.join
   end
 
   def last_four_uncracked_values
@@ -173,9 +177,10 @@ class Cypher
   def crack
     a = reversed_absolute_values.reverse
     characters = [*'a'..'z',*'0'..'9',' ','.',',']
-    a.map do |num|
+    cracked = a.map do |num|
       characters[num]
     end
+    cracked.join
   end
 
-end  
+end

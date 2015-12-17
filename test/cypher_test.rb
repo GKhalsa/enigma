@@ -103,31 +103,31 @@ class CypherTest < Minitest::Test
 
   def test_converted_array_to_encrypt
     message = Cypher.new("hello")#hello
-    assert_equal ["p","v","0",".","w"], message.encrypt
+    assert_equal "pv0.w", message.encrypt
   end
 
   def test_encrypt_longer_message
     message = Cypher.new("hello my friend")
-    assert_equal ["p", "v", "0", ".", "w", "o", "1", "l", "f", "w", "6", "8", "m", "4", "s"], message.encrypt
+    assert_equal "pv0.wo1lfw68m4s", message.encrypt
   end
 
   def test_decrypt_one_letter
     message = Cypher.new("p")
-    assert_equal ["h"], message.decrypt
+    assert_equal "h", message.decrypt
   end
 
   def test_decrypt_two_letters
     message = Cypher.new("pv")
-    assert_equal ["h","e"], message.decrypt
+    assert_equal "he", message.decrypt
   end
 
   def test_decrypt_message
     message = Cypher.new("pv0.wo1lfw68m4s")
-    assert_equal ["h","e","l","l","o"," ","m","y"," ","f","r","i","e","n","d"], message.decrypt
+    assert_equal "hello my friend", message.decrypt
   end
 
   def test_last_four_values_for_crack
-    #outputs real key???
+
     message = Cypher.new("ww6h3nt7t5y7n")
     assert_equal [31,24,33,13], message.last_four_uncracked_values
   end
@@ -147,13 +147,9 @@ class CypherTest < Minitest::Test
     assert_equal [37,37,3,13,4, 37], message.reversed_absolute_values
   end
 
-
-
-
-
   def test_cracking_the_message
-    message = Cypher.new("ww6h3nt7t5y7n")
-    assert_equal ["h", "e", "l", "l", "o", "8", ".", ".", "e", "n", "d", ".", "."], message.crack
+    message = Cypher.new("6n9n7np1w9qdy0vds")          #("ww6h3nt7t5y7n")
+    assert_equal "hello8..end..", message.crack
   end
 
 
