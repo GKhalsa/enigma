@@ -148,6 +148,7 @@ class CypherTest < Minitest::Test
   end
 
   def test_cracking_the_message
+    skip
     message = Cypher.new("6n9n7np1w9qdy0vds")          #("ww6h3nt7t5y7n")
     assert_equal "hello8..end..", message.crack
   end
